@@ -48,27 +48,32 @@ const BrandSections = () => {
           <section id={brand.slug} className={`py-16 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
             <div className="max-w-7xl mx-auto px-6">
               <div className="text-center mb-12 opacity-0 animate-fade-in">
-                {brand.logo_url && (
+                {brand.logo_url && brand.logo_url.trim() !== '' ? (
                   <img
                     src={brand.logo_url}
                     alt={`${brand.name} Logo`}
-                    className="h-12 w-auto max-w-full object-contain mx-auto mb-4"
-                    onError={(e) => { e.target.style.display = 'none'; }}
+                    className="h-16 w-auto max-w-full object-contain mx-auto mb-4"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      const heading = e.target.nextElementSibling;
+                      if (heading) {
+                        heading.classList.remove('sr-only');
+                        heading.classList.add('text-3xl', 'font-bold', 'text-secondary', 'mb-4');
+                      }
+                    }}
                   />
-                )}
-                <h2 className={brand.logo_url ? 'sr-only' : 'text-3xl font-bold text-secondary mb-4'}>{brand.name}</h2>
-                {brand.banner_url && (
+                ) : null}
+                <h2 className={brand.logo_url && brand.logo_url.trim() !== '' ? 'sr-only' : 'text-3xl font-bold text-secondary mb-4'}>{brand.name}</h2>
+                {brand.banner_url && brand.banner_url.trim() !== '' ? (
                   <img
                     src={brand.banner_url}
                     alt={`${brand.name} Banner`}
-                    className="w-full h-auto object-cover mx-auto mb-6 rounded-lg"
+                    className="w-full max-w-5xl h-auto object-cover mx-auto mb-6 rounded-lg shadow-md"
                     loading="lazy"
                     decoding="async"
-                    width="1200"
-                    height="400"
                     onError={(e) => { e.target.style.display = 'none'; }}
                   />
-                )}
+                ) : null}
                 <p className="text-gray-600 text-lg">{brand.description}</p>
                 {productsByBrand[brand.slug]?.some(p => p.status === 'coming_soon') && (
                   <div className="mt-4 inline-flex items-center px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium">
